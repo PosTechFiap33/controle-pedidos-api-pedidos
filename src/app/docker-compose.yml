@@ -1,0 +1,35 @@
+version: "3.8" 
+
+services:
+  controlepedido.database:
+    image: postgres:12
+    container_name: controlepedido.database
+    environment:
+      PGDATA: /data/postgres/controlepedidos
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - "./db_data:/data/postgres" 
+    ports:
+      - "5432:5432"
+    networks:
+      - controlepedido-network
+
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    ports:
+      - "4566:4566" # Porta para o gateway de serviços
+      - "8000:8000" # Porta para o DynamoDB
+    environment:
+      - SERVICES=dynamodb,sqs
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "./localstack_data:/var/lib/localstack" # Persistência opcional
+
+networks:
+    controlepedido-network:
+        driver: bridge 
+
+secrets:
+   db_password:
+     file: ./infra/db_password.txt

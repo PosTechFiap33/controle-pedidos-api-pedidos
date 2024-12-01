@@ -1,0 +1,13 @@
+{
+  "language": {
+    "feature": "en"
+  },
+  "plugins": [
+    {
+      "name": "SpecFlow.Tools.MsBuild.Generation",
+      "parameters": {
+        "enabled": "true"
+      }
+    }
+  ]
+}
