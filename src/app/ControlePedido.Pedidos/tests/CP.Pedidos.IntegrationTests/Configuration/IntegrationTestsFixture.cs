@@ -4,6 +4,9 @@ using CP.Pedidos.Domain.Adapters.MessageBus;
 using CP.Pedidos.Domain.Adapters.Repositories;
 using CP.Pedidos.Domain.Entities;
 using CP.Pedidos.Domain.ValueObjects;
+using CP.Pedidos.Infra.Communications;
+using CP.Pedidos.Infra.Models.Request;
+using CP.Pedidos.Infra.Models.Results;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -28,14 +31,16 @@ public class IntegrationTestFixture : IDisposable
             {
                 builder.ConfigureAppConfiguration((context, config) =>
                    {
+                       Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Testing");
                        context.HostingEnvironment.EnvironmentName = "Testing";
                    });
 
                 builder.ConfigureServices(async services =>
                 {
+                    AdicionarMockApiPagamento(services);
+                    
                     RemoverServicoInjetado<IMessageBus>(services);
                     services.AddScoped(s => new Mock<IMessageBus>().Object);
-                    // Remove o contexto de banco de dados existente, se houver
                    
                     RemoverServicoInjetado<ControlePedidoContext>(services);
                     services.AddDbContext<ControlePedidoContext>(options =>
@@ -93,6 +98,18 @@ public class IntegrationTestFixture : IDisposable
             new PedidoItem(Guid.NewGuid(), "Teste produto", "Descricao do teste do produto", 100, new Imagem("http://teste.com", "png", "teste"))
         };
         return PedidoFactory.Criar(itens);
+    }
+
+    private void AdicionarMockApiPagamento(IServiceCollection services){
+
+        var pagamentoApiMock = new Mock<IPagamentoApi>();
+        pagamentoApiMock.Setup(p => p.GerarQrCode(It.IsAny<GerarQrCodeRequest>(), It.IsAny<Guid>()))
+                        .ReturnsAsync(new GerarQrCodeResult{
+                            QrCode = "00020101021243650016COM.MERCADOLIBRE020130636e5ad12fa-79be-4c57-b016-f5092fc9ed3e5204000053039865802BR5909Test Test6009SAO PAULO62070503***63046A2E"
+                        });
+
+        RemoverServicoInjetado<IPagamentoApi>(services);
+        services.AddScoped(s => pagamentoApiMock.Object);
     }
 }
 
