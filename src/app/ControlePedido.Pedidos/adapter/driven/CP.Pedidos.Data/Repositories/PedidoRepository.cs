@@ -30,7 +30,7 @@ namespace ControlePedido.Infra.Repositories
         //TODO - avaliar maneiras melhores de fazer
         public void Atualizar(Pedido pedido)
         {
-            _context.Pedido.Attach(pedido);
+          //  _context.Pedido.Attach(pedido);
 
             _context.Entry(pedido).State = EntityState.Modified; 
 

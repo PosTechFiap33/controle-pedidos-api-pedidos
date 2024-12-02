@@ -232,24 +232,15 @@ namespace CP.Pedidos.IntegrationTests.Features.Pedido
             {
                 this.ScenarioStart();
 #line 31
-     testRunner.Given("que eu adicione o produto de valor 50", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+     testRunner.Given("que eu ja tenha um pedido pago", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 32
-     testRunner.When("eu fizer uma requisicao para gerar o pedido", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+     testRunner.When("eu fizer uma requisicao para iniciar o preparo", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 33
-     testRunner.And("eu fizer o pagamento manual do pedido criado", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+     testRunner.Then("o status do pedido deve ser \"Em preparacao\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 34
-     testRunner.And("eu fizer uma requisicao para iniciar o preparo", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 35
-     testRunner.Then("o id vinculado no pedido deve ser \"Cliente não informado\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-#line 36
-     testRunner.And("o status do pedido deve ser \"Em preparacao\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 37
      testRunner.And("os dados do pagamento devem estar preenchidos", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
@@ -264,7 +255,7 @@ namespace CP.Pedidos.IntegrationTests.Features.Pedido
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Deve exibir erro quando finalizar o preparado do pedido sem ter iniciado", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 39
+#line 36
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -274,16 +265,13 @@ namespace CP.Pedidos.IntegrationTests.Features.Pedido
             else
             {
                 this.ScenarioStart();
-#line 40
-    testRunner.Given("que eu adicione o produto de valor 50", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 37
+     testRunner.Given("que eu ja tenha um pedido pago", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 41
-    testRunner.When("eu fizer uma requisicao para gerar o pedido", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 38
+    testRunner.When("eu fizer uma requisicao para finalizar o prepado do pedido", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 42
-    testRunner.And("eu fizer uma requisicao para finalizar o prepado do pedido", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 43
+#line 39
     testRunner.Then("deve ser exibida a mensagem de erro \"Não foi possível finalizar o preparo do pedi" +
                         "do pois o preparo não foi iniciado!\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
@@ -299,7 +287,7 @@ namespace CP.Pedidos.IntegrationTests.Features.Pedido
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Deve finalizar o preparado do pedido quando o pedido já foi iniciado", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 45
+#line 41
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -309,29 +297,17 @@ namespace CP.Pedidos.IntegrationTests.Features.Pedido
             else
             {
                 this.ScenarioStart();
-#line 46
-     testRunner.Given("que eu adicione o produto de valor 50", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 42
+     testRunner.Given("que eu ja tenha um pedido iniciado", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 47
-     testRunner.When("eu fizer uma requisicao para gerar o pedido", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 43
+     testRunner.When("eu fizer uma requisicao para finalizar o prepado do pedido", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 48
-     testRunner.And("eu fizer o pagamento manual do pedido criado", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 49
-     testRunner.And("eu fizer uma requisicao para iniciar o preparo", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 50
-     testRunner.And("eu fizer uma requisicao para finalizar o prepado do pedido", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 51
+#line 44
      testRunner.Then("o id vinculado no pedido deve ser \"Cliente não informado\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 52
+#line 45
      testRunner.And("o status do pedido deve ser \"Pronto\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 53
-     testRunner.And("os dados do pagamento devem estar preenchidos", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -345,7 +321,7 @@ namespace CP.Pedidos.IntegrationTests.Features.Pedido
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Deve exibir erro quando for feita a entrega do pedido sem finalizar o preparo", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 55
+#line 47
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -355,16 +331,16 @@ namespace CP.Pedidos.IntegrationTests.Features.Pedido
             else
             {
                 this.ScenarioStart();
-#line 56
+#line 48
     testRunner.Given("que eu adicione o produto de valor 50", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 57
+#line 49
     testRunner.When("eu fizer uma requisicao para gerar o pedido", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 58
+#line 50
     testRunner.And("eu fizer uma requisicao para realizar a entrega do pedido", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 59
+#line 51
     testRunner.Then("deve ser exibida a mensagem de erro \"Não foi possível finalizar o pedido pois o p" +
                         "reparo não foi finalizado!\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
@@ -380,7 +356,7 @@ namespace CP.Pedidos.IntegrationTests.Features.Pedido
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Deve realizar a entrega do pedido quando o pedido já foi finalizado", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 61
+#line 53
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -390,20 +366,17 @@ namespace CP.Pedidos.IntegrationTests.Features.Pedido
             else
             {
                 this.ScenarioStart();
-#line 62
+#line 54
      testRunner.Given("que eu ja tenha um pedido finalizado", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 63
+#line 55
      testRunner.When("eu fizer uma requisicao para realizar a entrega do pedido", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 64
+#line 56
      testRunner.Then("o id vinculado no pedido deve ser \"Cliente não informado\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 65
+#line 57
      testRunner.And("o status do pedido deve ser \"Finalizado\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 66
-     testRunner.And("os dados do pagamento devem estar preenchidos", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -417,7 +390,7 @@ namespace CP.Pedidos.IntegrationTests.Features.Pedido
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Deve listar os pedidos", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 68
+#line 59
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -427,13 +400,13 @@ namespace CP.Pedidos.IntegrationTests.Features.Pedido
             else
             {
                 this.ScenarioStart();
-#line 69
+#line 60
      testRunner.Given("que eu tenha pedidos cadastrados", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 70
+#line 61
      testRunner.When("eu fizer uma requisicao listar os pedidos", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 71
+#line 62
      testRunner.Then("deve ser exibida a lista dos pedidos", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }

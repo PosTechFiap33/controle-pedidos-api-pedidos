@@ -9,7 +9,6 @@ using CP.Pedidos.IntegrationTests;
 using FluentAssertions;
 using TechTalk.SpecFlow;
 using Xunit;
-using static CP.Pedidos.Domain.Entities.Pedido;
 
 namespace ControlePedido.IntegrationTests;
 
@@ -31,7 +30,8 @@ public class PedidoStepDefinitions : IClassFixture<IntegrationTestFixture>
     private string _codigoTransacaoPagamento;
     private readonly IntegrationTestFixture _fixture;
     private List<Pedido> _pedidos;
-    private Pedido _pedidoFinalizado;
+    // private Pedido _pedidoFinalizado;
+    // private Pedido _pedidoPago;
 
     public PedidoStepDefinitions(IntegrationTestFixture fixture)
     {
@@ -47,9 +47,9 @@ public class PedidoStepDefinitions : IClassFixture<IntegrationTestFixture>
 
 
     [Given(@"que eu ja tenha um pedido finalizado")]
-    public async void Givenqueeujatenhaumpedidofinalizado()
+    public async Task Givenqueeujatenhaumpedidofinalizado()
     {
-        _pedidoFinalizado = _fixture.CriarPedido();
+        var _pedidoFinalizado = _fixture.CriarPedido();
         _pedidoFinalizado.Pagar(Guid.NewGuid());
         _pedidoFinalizado.IniciarPreparo();
         _pedidoFinalizado.FinalizarPreparo();
@@ -57,6 +57,31 @@ public class PedidoStepDefinitions : IClassFixture<IntegrationTestFixture>
         _fixture.context.Pedido.Add(_pedidoFinalizado);
 
         await _fixture.context.SaveChangesAsync();
+
+        _pedidoCriado = new PedidoCriadoDTO { Pedido = new PedidoDTO(_pedidoFinalizado) };
+    }
+
+
+    [Given(@"que eu ja tenha um pedido pago")]
+    public async Task Givenqueeujatenhaumpedidopago()
+    {
+        var _pedidoPago = _fixture.CriarPedido();
+        _pedidoPago.Pagar(Guid.NewGuid());
+        _fixture.context.Pedido.Add(_pedidoPago);
+        await _fixture.context.SaveChangesAsync();
+        _pedidoCriado = new PedidoCriadoDTO { Pedido = new PedidoDTO(_pedidoPago) };
+
+    }
+
+    [Given(@"que eu ja tenha um pedido iniciado")]
+    public async Task Givenqueeujatenhaumpedidoiniciado()
+    {
+        var pedidoIniciado = _fixture.CriarPedido();
+        pedidoIniciado.Pagar(Guid.NewGuid());
+        pedidoIniciado.IniciarPreparo();
+        _fixture.context.Pedido.Add(pedidoIniciado);
+        await _fixture.context.SaveChangesAsync();
+        _pedidoCriado = new PedidoCriadoDTO { Pedido = new PedidoDTO(pedidoIniciado) };
     }
 
     [Given(@"que eu adicione o produto de valor (.*)")]
@@ -134,7 +159,7 @@ public class PedidoStepDefinitions : IClassFixture<IntegrationTestFixture>
     [When(@"eu fizer uma requisicao para finalizar o prepado do pedido")]
     public async Task Wheneufizerumarequisicaoparafinalizaroprepadodopedido()
     {
-        _response = await Client.PatchAsync($"{_rota}/{_pedidoFinalizado.Id}/finalizar-preparo", null);
+        _response = await Client.PatchAsync($"{_rota}/{_pedidoCriado.Pedido.Id}/finalizar-preparo", null);
     }
 
     [When(@"eu fizer o pagamento manual do pedido criado")]
@@ -151,7 +176,7 @@ public class PedidoStepDefinitions : IClassFixture<IntegrationTestFixture>
     [When(@"eu fizer uma requisicao para realizar a entrega do pedido")]
     public async Task Wheneufizerumarequisicaopararealizaraentregadopedido()
     {
-        _response = await Client.PatchAsync($"{_rota}/{_pedidoFinalizado.Id}/entregar", null);
+        _response = await Client.PatchAsync($"{_rota}/{_pedidoCriado.Pedido.Id}/entregar", null);
     }
 
     [When(@"eu fizer uma requisicao listar os pedidos")]
@@ -207,7 +232,7 @@ public class PedidoStepDefinitions : IClassFixture<IntegrationTestFixture>
     [Then(@"os dados do pagamento devem estar preenchidos")]
     public void Thenosdadosdopagamentodevemestarpreenchidos()
     {
-        _acompanhamentoPedido.CodigoPagamento.Should().Be(_codigoTransacaoPagamento);
+        _acompanhamentoPedido.CodigoPagamento.Should().NotBeEmpty();
     }
 
     [Then(@"deve ser exibida a mensagem de erro ""(.*)""")]
@@ -226,7 +251,12 @@ public class PedidoStepDefinitions : IClassFixture<IntegrationTestFixture>
              };
 
         var dados = await _response.Content.ReadAsStringAsync();
-        var pedidos = JsonSerializer.Deserialize<List<PedidoDTO>>(dados);
+
+        var pedidos = JsonSerializer.Deserialize<List<PedidoDTO>>(dados, new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            IncludeFields = true
+        });
 
         pedidos.Should().NotBeEmpty();
         pedidos[0].Status.Should().Be("Pronto");

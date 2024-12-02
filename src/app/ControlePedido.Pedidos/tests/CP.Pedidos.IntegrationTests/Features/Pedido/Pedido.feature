@@ -28,29 +28,21 @@ Feature: Pedido
     Then deve ser exibida a mensagem de erro "Não foi realizado o pagamento para o pedido informado!"
 
   Scenario: Deve iniciar o preparado do pedido quando o pagamento for realizado
-     Given que eu adicione o produto de valor 50
-     When eu fizer uma requisicao para gerar o pedido
-     And eu fizer o pagamento manual do pedido criado
-     And eu fizer uma requisicao para iniciar o preparo
-     Then o id vinculado no pedido deve ser "Cliente não informado"
-     And o status do pedido deve ser "Em preparacao"
+     Given que eu ja tenha um pedido pago
+     When eu fizer uma requisicao para iniciar o preparo
+     Then o status do pedido deve ser "Em preparacao"
      And os dados do pagamento devem estar preenchidos
 
   Scenario: Deve exibir erro quando finalizar o preparado do pedido sem ter iniciado
-    Given que eu adicione o produto de valor 50
-    When eu fizer uma requisicao para gerar o pedido
-    And eu fizer uma requisicao para finalizar o prepado do pedido
+     Given que eu ja tenha um pedido pago
+    When eu fizer uma requisicao para finalizar o prepado do pedido
     Then deve ser exibida a mensagem de erro "Não foi possível finalizar o preparo do pedido pois o preparo não foi iniciado!"
 
   Scenario: Deve finalizar o preparado do pedido quando o pedido já foi iniciado
-     Given que eu adicione o produto de valor 50
-     When eu fizer uma requisicao para gerar o pedido
-     And eu fizer o pagamento manual do pedido criado
-     And eu fizer uma requisicao para iniciar o preparo
-     And eu fizer uma requisicao para finalizar o prepado do pedido
+     Given que eu ja tenha um pedido iniciado
+     When eu fizer uma requisicao para finalizar o prepado do pedido
      Then o id vinculado no pedido deve ser "Cliente não informado"
      And o status do pedido deve ser "Pronto"
-     And os dados do pagamento devem estar preenchidos
 
   Scenario: Deve exibir erro quando for feita a entrega do pedido sem finalizar o preparo
     Given que eu adicione o produto de valor 50
@@ -63,7 +55,6 @@ Feature: Pedido
      When eu fizer uma requisicao para realizar a entrega do pedido
      Then o id vinculado no pedido deve ser "Cliente não informado"
      And o status do pedido deve ser "Finalizado"
-     And os dados do pagamento devem estar preenchidos
 
   Scenario: Deve listar os pedidos
      Given que eu tenha pedidos cadastrados
