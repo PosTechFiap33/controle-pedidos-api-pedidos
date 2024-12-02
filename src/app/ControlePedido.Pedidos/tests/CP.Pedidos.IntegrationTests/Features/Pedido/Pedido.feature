@@ -61,7 +61,6 @@ Feature: Pedido
      When eu fizer uma requisicao listar os pedidos
      Then deve ser exibida a lista dos pedidos
 
-
   Scenario: Deve realizar a jornada completa
      Given que eu iforme o id do cliente "eb222a9d-e491-4f44-b9e7-a070ef7a4f12"
      And que eu adicione o produto de valor 30

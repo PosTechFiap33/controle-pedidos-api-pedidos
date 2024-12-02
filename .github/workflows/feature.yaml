@@ -1,0 +1,34 @@
+name: .NET Build and Test Workflow
+
+on:
+  push:
+    branches:
+    - feature**
+
+permissions:
+  pull-requests: write
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out the repository
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.ref }} # Checkout para a branch atual
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '8.0.x' # Use a versão mais recente do .NET 7.0 disponível
+
+    - name: Install dependencies
+      run: dotnet restore  src/app/ControlePedido.Pedidos/ControlePedido.Pedidos.sln
+
+    - name: Build the project
+      run: dotnet build --no-restore --configuration Release  src/app/ControlePedido.Pedidos/ControlePedido.Pedidos.sln
+
+    - name: Run tests
+      run: dotnet test --no-build --configuration Release --verbosity normal  src/app/ControlePedido.Pedidos/ControlePedido.Pedidos.sln
