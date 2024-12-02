@@ -38,7 +38,7 @@ public class PagamentoProvider : IPagamentoProvider
         }
         catch (ApiException ex)
         {
-            _logger.LogError(ex, "Erro ao tentar gerar QR Code para o pedido {PedidoId} via Mercado Pago.", pedido.Id);
+            _logger.LogError(ex, "Erro ao ten tar gerar QR Code para o pedido {PedidoId} via Mercado Pago.", pedido.Id);
 
             var mensagemByPass = "Não foi possível comunicar com o sistema de pagamento para gerar o qrcode, utilize a rota de pagamento manual para prosseguir com seu pedido!";
 

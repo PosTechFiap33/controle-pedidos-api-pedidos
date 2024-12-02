@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CP.Pedidos.Data.Migrations
 {
     [DbContext(typeof(ControlePedidoContext))]
-    [Migration("20241201164423_Inicializacao")]
+    [Migration("20241202013649_Inicializacao")]
     partial class Inicializacao
     {
         /// <inheritdoc />
@@ -34,8 +34,8 @@ namespace CP.Pedidos.Data.Migrations
                     b.Property<Guid?>("ClienteId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("PagamentoId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("PagamentoId")
+                        .HasColumnType("text");
 
                     b.Property<decimal>("Valor")
                         .HasColumnType("numeric");

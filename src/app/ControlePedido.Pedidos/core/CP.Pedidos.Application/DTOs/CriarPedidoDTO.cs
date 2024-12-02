@@ -28,7 +28,7 @@ namespace CP.Pedidos.Application.DTOs
     [DisplayName("CriarPedido")]
     public class CriarPedidoDTO
     {
-        public Guid ClienteId { get; set; }
+        public Guid? ClienteId { get; set; }
 
         [Required(ErrorMessage = "Campo {0} obrigatorio")]
         public ICollection<PedidoItemDTO> Itens { get; set; }

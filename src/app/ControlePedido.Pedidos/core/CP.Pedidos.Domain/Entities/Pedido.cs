@@ -51,9 +51,9 @@ namespace CP.Pedidos.Domain.Entities
     {
         public decimal Valor { get; private set; }
         public Guid? ClienteId { get; private set; }
+        public string PagamentoId { get; set; }
         public ICollection<PedidoItem> Itens { get; private set; }
         public ICollection<PedidoStatus> Status { get; private set; }
-        public Guid? PagamentoId { get; private set; }
 
         protected Pedido() { }
 
@@ -75,11 +75,11 @@ namespace CP.Pedidos.Domain.Entities
 
         public void Pagar(Guid pagamentoId)
         {
-            AssertionConcern.AssertArgumentNotNull(PagamentoId, "O código do pagamento não pode ser vazio!");
+            AssertionConcern.AssertArgumentNotNull(pagamentoId, "O código do pagamento não pode ser vazio!");
 
-            if (PagamentoId is null)
+            if (PagamentoId == null || pagamentoId == Guid.Empty)
             {
-                PagamentoId = pagamentoId;
+                PagamentoId = pagamentoId.ToString();
                 AtualizarStatus(StatusPedido.RECEBIDO);
             }
         }
@@ -136,7 +136,7 @@ namespace CP.Pedidos.Domain.Entities
 
         private bool ValidarPagamento()
         {
-            return PagamentoId != null && PagamentoId != Guid.Empty;
+            return !string.IsNullOrEmpty(PagamentoId);
         }
 
         private bool VerificarExisteStatus(StatusPedido status)
@@ -154,7 +154,10 @@ namespace CP.Pedidos.Domain.Entities
         {
             public static Pedido Criar(ICollection<PedidoItem> itens, Guid? clienteId = null)
             {
-                return clienteId is null ? new Pedido(itens) : new Pedido(itens, clienteId.Value);
+                if (clienteId != null && clienteId != Guid.Empty)
+                    return new Pedido(itens, clienteId.Value);
+
+                return new Pedido(itens);
             }
         }
     }

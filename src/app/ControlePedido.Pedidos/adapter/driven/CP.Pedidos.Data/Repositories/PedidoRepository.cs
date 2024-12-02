@@ -30,6 +30,10 @@ namespace ControlePedido.Infra.Repositories
         //TODO - avaliar maneiras melhores de fazer
         public void Atualizar(Pedido pedido)
         {
+            _context.Pedido.Attach(pedido);
+
+            _context.Entry(pedido).State = EntityState.Modified; 
+
             foreach (var status in pedido.Status)
             {
                 if (status.PedidoId == Guid.Empty)
@@ -37,13 +41,12 @@ namespace ControlePedido.Infra.Repositories
                 else
                     _context.Entry(status).State = EntityState.Modified;
             }
-
-            _context.Pedido.Attach(pedido);
         }
 
         public async Task<Pedido?> ConsultarPorId(Guid pedidoId)
         {
             return await _context.Pedido
+                           .AsNoTracking()
                            .Include(p => p.Status)
                            .FirstOrDefaultAsync(p => p.Id == pedidoId);
         }

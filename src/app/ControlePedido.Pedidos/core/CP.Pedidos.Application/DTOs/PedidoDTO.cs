@@ -5,23 +5,12 @@ using CP.Pedidos.Domain.Entities;
 
 namespace CP.Pedidos.Application.DTOs
 {
+
     [DisplayName("Pedido")]
-    public class PedidoDTO
+    public class PedidoDTO : PedidoDTORetornoBase
     {
-        [JsonPropertyName("id")]
-        public Guid Id { get; set; }
-
-        [JsonPropertyName("valor")]
-        public decimal Valor { get; set; }
-
-        [JsonPropertyName("clienteId")]
-        public string ClienteId { get; set; }
-
         [JsonPropertyName("itens")]
         public IEnumerable<PedidoItemDTO> Itens { get; set; }
-
-        [JsonPropertyName("status")]
-        public string Status { get; set; }
 
         [JsonPropertyName("dataHora")]
         public string DataHora { get; set; }
@@ -30,11 +19,8 @@ namespace CP.Pedidos.Application.DTOs
         {
         }
 
-        public PedidoDTO(Pedido pedido)
+        public PedidoDTO(Pedido pedido) : base(pedido)
         {
-            Id = pedido.Id;
-            Valor = pedido.Valor;
-            ClienteId = pedido.ClienteId?.ToString() ?? "Cliente não informado";
             Itens = pedido.Itens.Select(item => new PedidoItemDTO
             {
                 ProdutoId = item.ProdutoId,
@@ -42,7 +28,6 @@ namespace CP.Pedidos.Application.DTOs
                 Preco = item.Preco,
                 Imagem = item.Imagem
             }).ToList();
-            Status = pedido.RetornarStatusAtual().GetDescription();
             DataHora = pedido.RetornarDataHora();
         }
     }

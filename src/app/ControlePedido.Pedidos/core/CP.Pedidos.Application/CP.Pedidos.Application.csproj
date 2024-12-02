@@ -16,8 +16,4 @@
         <ProjectReference Include="../CP.Pedidos.Domain/CP.Pedidos.Domain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="UseCases/" />
-    </ItemGroup>
-
 </Project>

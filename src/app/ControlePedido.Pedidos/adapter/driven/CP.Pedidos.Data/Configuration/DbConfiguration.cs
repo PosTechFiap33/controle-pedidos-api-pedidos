@@ -11,14 +11,16 @@ namespace CP.Pedidos.Data.Configuration;
 public static class DynamoDbConfiguration
 {
 
-    public static IServiceCollection AddDatabaseConfiguration(this IServiceCollection services, IConfiguration configuration){
+    public static IServiceCollection AddDatabaseConfiguration(this IServiceCollection services, IConfiguration configuration)
+    {
+
+        services.AddScoped<ControlePedidoContext>();
+        services.AddScoped<IPedidoRepository, PedidoRepository>();
+
         var connectionEnv = "DbConnection";
         var connectionString = Environment.GetEnvironmentVariable(connectionEnv) ?? configuration[connectionEnv];
         services.AddDbContext<ControlePedidoContext>(options => options.UseNpgsql(connectionString));
 
-        services.AddScoped<ControlePedidoContext>();
-        services.AddTransient<IPedidoRepository, PedidoRepository>();
-            
         return services;
     }
 

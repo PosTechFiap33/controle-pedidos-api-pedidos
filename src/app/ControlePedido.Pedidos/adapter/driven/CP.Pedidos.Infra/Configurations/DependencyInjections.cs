@@ -1,6 +1,8 @@
+using CP.Pedidos.CrpssCutting.Configuration;
 using CP.Pedidos.Domain.Adapters.MessageBus;
 using CP.Pedidos.Domain.Adapters.Providers;
 using CP.Pedidos.Infra.Messaging;
+using CP.Pedidos.Infra.Messaging.Workers;
 using CP.Pedidos.Infra.Providers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +22,8 @@ public static class RefitConfiguration
     public static IServiceCollection AddInfraConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         // Configura as integrações
+        services.Configure<AWSConfiguration>(configuration.GetSection("AWS"));
+
         services.Configure<Integrations>(configuration.GetSection("Integrations"));
 
         // Adiciona o serviço de mensagens e provedores
@@ -28,6 +32,8 @@ public static class RefitConfiguration
 
         // Registra os clientes Refit dinamicamente
         services.AddRefitClientsFromConfiguration();
+
+        services.AddHostedService<PagamentoMessagingWorker>();
 
         return services;
     }

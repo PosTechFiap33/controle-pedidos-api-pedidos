@@ -17,36 +17,55 @@ namespace ControlePedido.IntegrationTests;
 public class PedidoStepDefinitions : IClassFixture<IntegrationTestFixture>
 {
     private readonly CriarPedidoDTO _pedido;
-    private readonly HttpClient _client;
+    private HttpClient Client
+    {
+        get
+        {
+            return _fixture.Client;
+        }
+    }
     private readonly string _rota = "api/pedido";
     private HttpResponseMessage _response;
     private PedidoCriadoDTO _pedidoCriado;
     private AcompanhamentoPedidoDTO _acompanhamentoPedido;
-    private Guid _clienteIdVinculado;
     private string _codigoTransacaoPagamento;
     private readonly IntegrationTestFixture _fixture;
     private List<Pedido> _pedidos;
+    private Pedido _pedidoFinalizado;
 
     public PedidoStepDefinitions(IntegrationTestFixture fixture)
     {
-        _client = fixture.Client;
         _pedido = new CriarPedidoDTO();
         _fixture = fixture;
     }
 
     [Given(@"que eu iforme o id do cliente ""(.*)""")]
-    public void GivenQueEuInformeIdCliente(Guid clientId)
+    public void GivenQueEuInformeIdCliente(string clientId)
     {
-        _pedido.ClienteId = clientId;
+        _pedido.ClienteId = Guid.Parse(clientId);
+    }
+
+
+    [Given(@"que eu ja tenha um pedido finalizado")]
+    public async void Givenqueeujatenhaumpedidofinalizado()
+    {
+        _pedidoFinalizado = _fixture.CriarPedido();
+        _pedidoFinalizado.Pagar(Guid.NewGuid());
+        _pedidoFinalizado.IniciarPreparo();
+        _pedidoFinalizado.FinalizarPreparo();
+
+        _fixture.context.Pedido.Add(_pedidoFinalizado);
+
+        await _fixture.context.SaveChangesAsync();
     }
 
     [Given(@"que eu adicione o produto de valor (.*)")]
     public async Task Givenqueeuadicioneoprodutodeidevalor(decimal value)
     {
-        var faker = new Faker("pt_BR"); 
+        var faker = new Faker("pt_BR");
 
-        var nomeProduto = faker.Commerce.ProductName();  
-        var descricaoProduto = faker.Lorem.Sentence();  
+        var nomeProduto = faker.Commerce.ProductName();
+        var descricaoProduto = faker.Lorem.Sentence();
 
         _pedido.Itens.Add(new PedidoItemDTO
         {
@@ -66,26 +85,22 @@ public class PedidoStepDefinitions : IClassFixture<IntegrationTestFixture>
         _fixture.context.Pedido.RemoveRange(pedidosRemover);
         _fixture.context.SaveChanges();
 
-        var itens = new List<PedidoItem>{
-            new PedidoItem(Guid.NewGuid(), "Teste produto", "Descricao do teste do produto", 100, new Imagem("http://teste.com", "png", "teste"))
-        };
+        var pedidoCriado = _fixture.CriarPedido();
 
-        var pedidoCriado = PedidoFactory.Criar(itens);
+        var pedidoPago = _fixture.CriarPedido();
+        pedidoPago.Pagar(Guid.NewGuid());
 
-        var pedidoPago = PedidoFactory.Criar(itens);
-        pedidoPago.Pagar(new Guid());
-
-        var pedidoIniciado = PedidoFactory.Criar(itens);
-        pedidoIniciado.Pagar(new Guid());
+        var pedidoIniciado = _fixture.CriarPedido();
+        pedidoIniciado.Pagar(Guid.NewGuid());
         pedidoIniciado.IniciarPreparo();
 
-        var pedidoFinalizado = PedidoFactory.Criar(itens);
-        pedidoFinalizado.Pagar(new Guid());
+        var pedidoFinalizado = _fixture.CriarPedido();
+        pedidoFinalizado.Pagar(Guid.NewGuid());
         pedidoFinalizado.IniciarPreparo();
         pedidoFinalizado.FinalizarPreparo();
 
-        var pedidoEntregue = PedidoFactory.Criar(itens);
-        pedidoEntregue.Pagar(new Guid());
+        var pedidoEntregue = _fixture.CriarPedido();
+        pedidoEntregue.Pagar(Guid.NewGuid());
         pedidoEntregue.IniciarPreparo();
         pedidoEntregue.FinalizarPreparo();
         pedidoEntregue.Finalizar();
@@ -106,40 +121,43 @@ public class PedidoStepDefinitions : IClassFixture<IntegrationTestFixture>
     [When(@"eu fizer uma requisicao para gerar o pedido")]
     public async Task Wheneufizerumarequisicaoparageraropedido()
     {
-        _response = await _client.PostAsJsonAsync(_rota, _pedido);
+        _response = await Client.PostAsJsonAsync(_rota, _pedido);
         _pedidoCriado = await RecuperarPedidoDaResposta();
     }
 
     [When(@"eu fizer uma requisicao para iniciar o preparo")]
     public async Task Wheneufizerumarequisicaoparainiciaropreparo()
     {
-        _response = await _client.PatchAsync($"{_rota}/{_pedidoCriado.Pedido.Id}/iniciar-preparo", null);
+        _response = await Client.PatchAsync($"{_rota}/{_pedidoCriado.Pedido.Id}/iniciar-preparo", null);
     }
 
     [When(@"eu fizer uma requisicao para finalizar o prepado do pedido")]
     public async Task Wheneufizerumarequisicaoparafinalizaroprepadodopedido()
     {
-        _response = await _client.PatchAsync($"{_rota}/{_pedidoCriado.Pedido.Id}/finalizar-preparo", null);
+        _response = await Client.PatchAsync($"{_rota}/{_pedidoFinalizado.Id}/finalizar-preparo", null);
     }
 
     [When(@"eu fizer o pagamento manual do pedido criado")]
     public async Task Wheneufizeropagamentomanualdopedidocriado()
     {
-        // _codigoTransacaoPagamento = Guid.NewGuid().ToString();
-        // var pagamentoManual = new PagarPedidoManualDTO(_pedidoCriado.Pedido.Id, _codigoTransacaoPagamento, _pedidoCriado.Pedido.Valor);
-        // _response = await _client.PostAsJsonAsync($"api/pagamento", pagamentoManual);
+        //TODO pensar em como melhorar pois hj isso vem da fila, como simular a fila?
+        var pedido = await _fixture.repository
+                                   .ConsultarPorId(_pedidoCriado.Pedido.Id);
+        pedido.Pagar(Guid.NewGuid());
+        _fixture.repository.Atualizar(pedido);
+        await _fixture.repository.UnitOfWork.Commit();
     }
 
     [When(@"eu fizer uma requisicao para realizar a entrega do pedido")]
     public async Task Wheneufizerumarequisicaopararealizaraentregadopedido()
     {
-        _response = await _client.PatchAsync($"{_rota}/{_pedidoCriado.Pedido.Id}/entregar", null);
+        _response = await Client.PatchAsync($"{_rota}/{_pedidoFinalizado.Id}/entregar", null);
     }
 
     [When(@"eu fizer uma requisicao listar os pedidos")]
     public async Task Wheneufizerumarequisicaolistarospedidos()
     {
-        _response = await _client.GetAsync($"{_rota}");
+        _response = await Client.GetAsync($"{_rota}");
     }
 
     [Then(@"o status code deve ser (.*)")]
@@ -160,8 +178,7 @@ public class PedidoStepDefinitions : IClassFixture<IntegrationTestFixture>
     [Then(@"o id vinculado no pedido deve ser ""(.*)""")]
     public void Thenoidvinculadonopedidodeveser(string clientId)
     {
-        _clienteIdVinculado = Guid.Parse(clientId);
-        _pedidoCriado.Pedido.ClienteId.Should().Be(clientId.ToString());
+        _pedidoCriado.Pedido.ClienteId.Should().Be(clientId);
     }
 
     [Then(@"o valor do pedido deve ser (.*)")]
@@ -173,10 +190,10 @@ public class PedidoStepDefinitions : IClassFixture<IntegrationTestFixture>
     [Then(@"o status do pedido deve ser ""(.*)""")]
     public async Task Thenostatusdopedidodeveser(string status)
     {
-        var response = await _client.GetAsync($"{_rota}/{_pedidoCriado.Pedido.Id}/acompanhar");
+        var response = await Client.GetAsync($"{_rota}/{_pedidoCriado.Pedido.Id}/acompanhar");
         var dados = await response.Content.ReadAsStringAsync();
         _acompanhamentoPedido = JsonSerializer.Deserialize<AcompanhamentoPedidoDTO>(dados);
-        _acompanhamentoPedido.ClientId.Should().Be(_clienteIdVinculado.ToString());
+        _acompanhamentoPedido.ClienteId.Should().Be(_pedidoCriado.Pedido.ClienteId);
         _acompanhamentoPedido.Status.Should().Be(status);
         _acompanhamentoPedido.Valor.Should().Be(_pedidoCriado.Pedido.Valor);
     }
@@ -227,7 +244,8 @@ public class PedidoStepDefinitions : IClassFixture<IntegrationTestFixture>
         try
         {
             var dados = await _response.Content.ReadAsStringAsync();
-            var teste = JsonSerializer.Deserialize<PedidoCriadoDTO>(dados, new JsonSerializerOptions {
+            var teste = JsonSerializer.Deserialize<PedidoCriadoDTO>(dados, new JsonSerializerOptions
+            {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 IncludeFields = true
             });

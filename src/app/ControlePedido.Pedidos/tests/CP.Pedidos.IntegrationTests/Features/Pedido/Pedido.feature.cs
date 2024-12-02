@@ -151,7 +151,7 @@ namespace CP.Pedidos.IntegrationTests.Features.Pedido
             {
                 this.ScenarioStart();
 #line 15
-    testRunner.Given("que eu adicione o produto de valor 50", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+    testRunner.Given("que eu adicione o produto de valor 250", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 16
     testRunner.When("eu fizer uma requisicao para gerar o pedido", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
@@ -163,10 +163,10 @@ namespace CP.Pedidos.IntegrationTests.Features.Pedido
     testRunner.And("os dados do pedido estejam validos", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 19
-    testRunner.And("o cpf vinculado no pedido deve ser \"CPF não fornecido\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+    testRunner.And("o id vinculado no pedido deve ser \"Cliente não informado\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 20
-    testRunner.And("o valor do pedido deve ser 50", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+    testRunner.And("o valor do pedido deve ser 250", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 21
     testRunner.And("o status do pedido deve ser \"Criado\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -244,7 +244,7 @@ namespace CP.Pedidos.IntegrationTests.Features.Pedido
      testRunner.And("eu fizer uma requisicao para iniciar o preparo", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 35
-     testRunner.Then("o cpf vinculado no pedido deve ser \"CPF não fornecido\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+     testRunner.Then("o id vinculado no pedido deve ser \"Cliente não informado\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 36
      testRunner.And("o status do pedido deve ser \"Em preparacao\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -325,7 +325,7 @@ namespace CP.Pedidos.IntegrationTests.Features.Pedido
      testRunner.And("eu fizer uma requisicao para finalizar o prepado do pedido", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 51
-     testRunner.Then("o cpf vinculado no pedido deve ser \"CPF não fornecido\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+     testRunner.Then("o id vinculado no pedido deve ser \"Cliente não informado\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 52
      testRunner.And("o status do pedido deve ser \"Pronto\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -391,30 +391,18 @@ namespace CP.Pedidos.IntegrationTests.Features.Pedido
             {
                 this.ScenarioStart();
 #line 62
-     testRunner.Given("que eu adicione o produto de valor 50", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+     testRunner.Given("que eu ja tenha um pedido finalizado", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 63
-     testRunner.When("eu fizer uma requisicao para gerar o pedido", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+     testRunner.When("eu fizer uma requisicao para realizar a entrega do pedido", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 64
-     testRunner.And("eu fizer o pagamento manual do pedido criado", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+     testRunner.Then("o id vinculado no pedido deve ser \"Cliente não informado\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 65
-     testRunner.And("eu fizer uma requisicao para iniciar o preparo", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 66
-     testRunner.And("eu fizer uma requisicao para finalizar o prepado do pedido", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 67
-     testRunner.And("eu fizer uma requisicao para realizar a entrega do pedido", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 68
-     testRunner.Then("o cpf vinculado no pedido deve ser \"CPF não fornecido\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-#line 69
      testRunner.And("o status do pedido deve ser \"Finalizado\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 70
+#line 66
      testRunner.And("os dados do pagamento devem estar preenchidos", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
@@ -429,7 +417,7 @@ namespace CP.Pedidos.IntegrationTests.Features.Pedido
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Deve listar os pedidos", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 72
+#line 68
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -439,13 +427,13 @@ namespace CP.Pedidos.IntegrationTests.Features.Pedido
             else
             {
                 this.ScenarioStart();
-#line 73
+#line 69
      testRunner.Given("que eu tenha pedidos cadastrados", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 74
+#line 70
      testRunner.When("eu fizer uma requisicao listar os pedidos", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 75
+#line 71
      testRunner.Then("deve ser exibida a lista dos pedidos", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }

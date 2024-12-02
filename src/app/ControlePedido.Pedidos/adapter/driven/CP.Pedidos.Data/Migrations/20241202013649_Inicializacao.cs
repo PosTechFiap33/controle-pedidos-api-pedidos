@@ -18,7 +18,7 @@ namespace CP.Pedidos.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Valor = table.Column<decimal>(type: "numeric", nullable: false),
                     ClienteId = table.Column<Guid>(type: "uuid", nullable: true),
-                    PagamentoId = table.Column<Guid>(type: "uuid", nullable: true)
+                    PagamentoId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

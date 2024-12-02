@@ -1,6 +1,7 @@
 using System.Reflection;
 using ControlePedido.Application.UseCases.Pedidos;
 using CP.Pedidos.Application.UseCases.Pedidos;
+using CP.Pedidos.Domain.UseCases;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,7 +23,8 @@ public static class DependencyInjection
         services.AddTransient<IFinalizarPreparoPedidoUseCase, FinalizarPreparoPedidoUseCase>();
         services.AddTransient<IEntregarPedidoUseCase, EntregarPedidoUseCase>();
         services.AddTransient<IAcompanharPedidoUseCase, AcompanharPedidoUseCase>();
-
+        services.AddScoped<IPagarPedidoUseCase, PagarPedidoUseCase>();
+        
         return services;
     }
 }

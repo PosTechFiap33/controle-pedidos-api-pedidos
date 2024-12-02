@@ -11,6 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Adapters/UseCases/" />
       <Folder Include="DomainObjects/Notifications/" />
       <Folder Include="Entities/" />
       <Folder Include="ValueObjects/" />

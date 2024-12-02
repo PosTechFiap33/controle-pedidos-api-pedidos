@@ -1,9 +1,10 @@
-using Amazon.Runtime;
+using System.Text.Json;
 using Amazon.SQS;
 using Amazon.SQS.Model;
 using CP.Pedidos.CrossCutting.Factories;
 using CP.Pedidos.CrpssCutting.Configuration;
 using CP.Pedidos.Domain.Adapters.MessageBus;
+using CP.Pedidos.Domain.Base;
 using Microsoft.Extensions.Options;
 
 namespace CP.Pedidos.Infra.Messaging;
@@ -17,14 +18,16 @@ public class SqsMessageBus : IMessageBus
         _configuration = aWSConfiguration.Value;
     }
 
+    public async Task DeleteMessage(string topicOrQueue, string messageId)
+    {
+        var client = CreateClient();
+
+        await client.DeleteMessageAsync(topicOrQueue, messageId);
+    }
+
     public async Task PublishAsync<T>(T message, string queueUrl)
     {
-        var config = new AmazonSQSConfig();
-
-        if (!string.IsNullOrEmpty(_configuration.ServiceUrl))
-            config.ServiceURL = _configuration.ServiceUrl;
-
-        var client = new AmazonSQSClient(config.CreateCredentials(_configuration), config);
+        var client = CreateClient();
 
         var sendMessageRequest = new SendMessageRequest
         {
@@ -33,5 +36,55 @@ public class SqsMessageBus : IMessageBus
         };
 
         await client.SendMessageAsync(sendMessageRequest);
+    }
+
+    public async Task<IEnumerable<MessageResult<T>>> ReceiveMessagesAsync<T>(string queueUrl, int maxMessages = 10, int waitTimeSeconds = 5)
+    {
+        try
+        {
+            var client = CreateClient();
+
+            var receiveMessageRequest = new ReceiveMessageRequest
+            {
+                QueueUrl = queueUrl,
+                MaxNumberOfMessages = maxMessages,
+                WaitTimeSeconds = waitTimeSeconds,
+                AttributeNames = new List<string> { "All" }, // Retorna todos os atributos da mensagem
+                MessageAttributeNames = new List<string> { "All" } // Retorna todos os atributos customizados da mensagem
+            };
+
+            var response = await client.ReceiveMessageAsync(receiveMessageRequest);
+
+            var messages = new List<MessageResult<T>>();
+
+            foreach (var message in response.Messages)
+            {
+                try
+                {
+                    messages.Add(new MessageResult<T>(JsonSerializer.Deserialize<T>(message.Body), message.ReceiptHandle));
+                }
+                catch (JsonException ex)
+                {
+                    throw new IntegrationExceptions($"Erro ao desserializar mensagem do SQS: {ex.Message}");
+                }
+            }
+
+            return messages;
+        }
+        catch (Exception ex)
+        {
+            //TODO: melhorar
+            throw ex;
+        }
+    }
+
+    private AmazonSQSClient CreateClient()
+    {
+        var config = new AmazonSQSConfig();
+
+        if (!string.IsNullOrEmpty(_configuration.ServiceUrl))
+            config.ServiceURL = _configuration.ServiceUrl;
+
+        return new AmazonSQSClient(config.CreateCredentials(_configuration), config);
     }
 }

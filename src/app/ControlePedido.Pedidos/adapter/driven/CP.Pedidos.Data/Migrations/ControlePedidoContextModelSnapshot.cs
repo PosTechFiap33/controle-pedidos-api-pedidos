@@ -31,8 +31,8 @@ namespace CP.Pedidos.Data.Migrations
                     b.Property<Guid?>("ClienteId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("PagamentoId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("PagamentoId")
+                        .HasColumnType("text");
 
                     b.Property<decimal>("Valor")
                         .HasColumnType("numeric");
