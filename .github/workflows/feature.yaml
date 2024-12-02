@@ -19,12 +19,12 @@ jobs:
     - name: Check out the repository
       uses: actions/checkout@v2
       with:
-        ref: ${{ github.ref }} # Checkout para a branch atual
+        ref: ${{ github.ref }}
 
     - name: Set up .NET
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: '8.0.x' # Use a versão mais recente do .NET 7.0 disponível
+        dotnet-version: '8.0.x'
 
     - name: Install dependencies
       run: dotnet restore src/app/ControlePedido.Pedidos/ControlePedidos.Pedidos.sln
@@ -51,7 +51,9 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       with:
         args: >
-          -Dsonar.projectKey=PosTechFiap33_controle-pedidos-api-pedidos -Dsonar.organization=postechfiap33 -Dsonar.host.url=https://sonarcloud.io -Dsonar.cs.opencover.reportsPaths=**/coverage.opencover.xml
+          -Dsonar.projectKey=PosTechFiap33_controle-pedidos-api-pedidos \ -Dsonar.organization=postechfiap33 \ -Dsonar.host.url=https://sonarcloud.io \ -Dsonar.cs.opencover.reportsPaths=**/coverage.opencover.xml
 
     - name: Generate coverage report
-      run: dotnet test --collect:"XPlat Code Coverage" --results-directory:coverage
+      run: |
+        # Gerar o relatório de cobertura com base no arquivo de cobertura coletado
+        dotnet reportgenerator -reports:./TestResults/coverage.opencover.xml -targetdir:./TestResults/coverage-report -reporttypes:Html
