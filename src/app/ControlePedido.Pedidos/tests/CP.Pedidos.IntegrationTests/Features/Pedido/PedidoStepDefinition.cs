@@ -7,6 +7,7 @@ using CP.Pedidos.Domain.Entities;
 using CP.Pedidos.Domain.ValueObjects;
 using CP.Pedidos.IntegrationTests;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using TechTalk.SpecFlow;
 using Xunit;
 
@@ -71,6 +72,25 @@ public class PedidoStepDefinitions : IClassFixture<IntegrationTestFixture>
         await _fixture.context.SaveChangesAsync();
         _pedidoCriado = new PedidoCriadoDTO { Pedido = new PedidoDTO(_pedidoPago) };
 
+    }
+
+    [When(@"o pedido gerado seja pago")]
+    public async Task Whenopedidogeradosejapago()
+    {
+        var _pedidoPago = await _fixture.repository.ConsultarPorId(_pedidoCriado.Pedido.Id);
+        _pedidoPago.Pagar(Guid.NewGuid());
+        _fixture.repository.Atualizar(_pedidoPago);
+        await _fixture.repository.UnitOfWork.Commit();
+
+        _pedidoPago = await _fixture.context
+                                    .Pedido
+                                    .AsNoTracking()
+                                    .Include(x => x.Itens)
+                                    .Include(x => x.Status)
+                                    .FirstOrDefaultAsync(x => x.Id == _pedidoPago.Id);
+
+        _pedidoCriado.Pedido = new PedidoDTO(_pedidoPago);
+      
     }
 
     [Given(@"que eu ja tenha um pedido iniciado")]
