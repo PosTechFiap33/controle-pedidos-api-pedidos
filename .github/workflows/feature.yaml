@@ -6,6 +6,8 @@ on:
     - feature**
 
 permissions:
+  contents: read
+  checks: write
   pull-requests: write
 
 jobs:
@@ -30,5 +32,26 @@ jobs:
     - name: Build the project
       run: dotnet build --no-restore --configuration Release src/app/ControlePedido.Pedidos/ControlePedidos.Pedidos.sln
 
-    - name: Run tests
-      run: dotnet test --no-build --configuration Release --verbosity normal src/app/ControlePedido.Pedidos/ControlePedidos.Pedidos.sln
+    - name: Run tests and collect coverage
+      run: |
+        dotnet test src/app/ControlePedido.Pedidos/ControlePedidos.Pedidos.sln \
+          --no-build \
+          --configuration Release \
+          --verbosity normal \
+          --collect:"XPlat Code Coverage" \
+          --results-directory ./TestResults \
+          --logger:"trx" \
+          /p:CollectCoverage=true \
+          /p:CoverletOutputFormat=openxml \
+          /p:CoverletOutput=./TestResults/coverage.opencover.xml
+
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@v2
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      with:
+        args: >
+          -Dsonar.projectKey=PosTechFiap33_controle-pedidos-api-pedidos -Dsonar.organization=postechfiap33 -Dsonar.host.url=https://sonarcloud.io -Dsonar.cs.opencover.reportsPaths=**/coverage.opencover.xml
+
+    - name: Generate coverage report
+      run: dotnet test --collect:"XPlat Code Coverage" --results-directory:coverage
