@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace CP.Pedidos.Infra.Models.Request;
 
+[ExcludeFromCodeCoverage]
 public class GerarQrCodeRequest
 {
     public IEnumerable<Item> Itens { get; private set; }
@@ -10,6 +13,7 @@ public class GerarQrCodeRequest
     }
 }
 
+[ExcludeFromCodeCoverage]
 public class Item {
 
     public string Nome { get; private set; }

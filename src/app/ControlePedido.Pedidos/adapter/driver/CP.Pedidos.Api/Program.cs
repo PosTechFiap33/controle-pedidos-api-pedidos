@@ -4,7 +4,9 @@ using CP.Pedidos.Api.Middlewares;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using CP.Pedidos.IOC.DependencyInjections;
 using CP.Pedidos.Data.Configuration;
+using System.Diagnostics.CodeAnalysis;
 
+[ExcludeFromCodeCoverage]
 public class Program
 {
     public static void Main(string[] args)
@@ -46,6 +48,8 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllers();
+
+        app.MapHealthChecks("/health");
 
         app.Run();
     }
