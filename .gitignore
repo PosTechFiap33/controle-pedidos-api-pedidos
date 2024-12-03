@@ -2,3 +2,4 @@ infra/postgres-data
 localstack_data
 db_data
 /.vs
+TestResults

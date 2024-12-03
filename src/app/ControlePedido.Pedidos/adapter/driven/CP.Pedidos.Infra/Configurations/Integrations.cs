@@ -1,7 +1,9 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace CP.Pedidos.Infra.Configurations;
 
+[ExcludeFromCodeCoverage]
 public class Integrations
 {
     public IEnumerable<ApiConfiguration> ApiConfigurations { get; set; }

@@ -6,7 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PropertyGroup>
         <WarningLevel>4</WarningLevel>
         <DocumentationFile>bin\Debug\net8.0\CP.Pedidos.Api.xml</DocumentationFile>
     </PropertyGroup>

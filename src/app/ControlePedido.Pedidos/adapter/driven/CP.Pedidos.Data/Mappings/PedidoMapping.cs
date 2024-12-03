@@ -1,10 +1,11 @@
-﻿using CP.Pedidos.Domain.Entities;
+﻿using System.Diagnostics.CodeAnalysis;
+using CP.Pedidos.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ControlePedido.Infra.Mappings;
 
-
+[ExcludeFromCodeCoverage]
 public class PedidoStatusMapping : IEntityTypeConfiguration<PedidoStatus>
 {
     public void Configure(EntityTypeBuilder<PedidoStatus> builder)
@@ -25,6 +26,7 @@ public class PedidoStatusMapping : IEntityTypeConfiguration<PedidoStatus>
     }
 }
 
+[ExcludeFromCodeCoverage]
 public class PedidoItemMapping : IEntityTypeConfiguration<PedidoItem>
 {
     public void Configure(EntityTypeBuilder<PedidoItem> builder)

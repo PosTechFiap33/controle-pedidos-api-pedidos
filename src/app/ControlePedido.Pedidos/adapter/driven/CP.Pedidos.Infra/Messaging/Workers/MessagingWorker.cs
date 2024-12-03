@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using CP.Pedidos.Domain.Adapters.MessageBus;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -5,6 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CP.Pedidos.Infra.Messaging.Workers;
 
+[ExcludeFromCodeCoverage]
 public abstract class MessagingWorker<T> : BackgroundService
 {
     protected readonly IServiceProvider _serviceProvider;

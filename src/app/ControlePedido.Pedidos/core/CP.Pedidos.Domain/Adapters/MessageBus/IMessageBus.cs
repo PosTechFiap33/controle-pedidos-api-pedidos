@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace CP.Pedidos.Domain.Adapters.MessageBus;
 
+[ExcludeFromCodeCoverage]
 public class MessageResult<T>
 {
     public T data { get; private set; }
