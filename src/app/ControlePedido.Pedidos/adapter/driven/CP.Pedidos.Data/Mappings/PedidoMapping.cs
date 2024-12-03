@@ -26,6 +26,7 @@ public class PedidoStatusMapping : IEntityTypeConfiguration<PedidoStatus>
     }
 }
 
+[ExcludeFromCodeCoverage]
 public class PedidoItemMapping : IEntityTypeConfiguration<PedidoItem>
 {
     public void Configure(EntityTypeBuilder<PedidoItem> builder)
