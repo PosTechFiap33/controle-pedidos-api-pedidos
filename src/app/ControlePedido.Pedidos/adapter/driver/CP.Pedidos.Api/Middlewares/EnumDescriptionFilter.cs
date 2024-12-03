@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -6,6 +7,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace CP.Pedidos.Api.Middlewares;
 
+[ExcludeFromCodeCoverage]
 public class EnumDescriptionFilter : ISchemaFilter
 {
     public void Apply(OpenApiSchema schema, SchemaFilterContext context)

@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using CP.Pedidos.Domain.Base;
 using CP.Pedidos.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace ControlePedido.Infra
 {
+    [ExcludeFromCodeCoverage]
     public class ControlePedidoContext : DbContext, IUnitOfWork
     {
         public ControlePedidoContext(DbContextOptions options) : base(options)

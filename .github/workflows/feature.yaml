@@ -6,29 +6,68 @@ on:
     - feature**
 
 permissions:
+  contents: read
+  checks: write
   pull-requests: write
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
+    # Checkout code from the repository
     - name: Check out the repository
       uses: actions/checkout@v2
       with:
-        ref: ${{ github.ref }} # Checkout para a branch atual
+        ref: ${{ github.ref }} # Checkout the current branch
 
+    # Set up .NET SDK
     - name: Set up .NET
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: '8.0.x' # Use a versão mais recente do .NET 7.0 disponível
+        dotnet-version: '8.0.x' # Using the latest .NET 8.0 version
 
+    # Install dotnet-coverage tool
+    - name: Install dotnet-coverage tool
+      run: dotnet tool install --global dotnet-coverage
+
+    # Install dependencies
     - name: Install dependencies
-      run: dotnet restore  src/app/ControlePedido.Pedidos/ControlePedidos.Pedidos.sln
+      run: dotnet restore src/app/ControlePedido.Pedidos/ControlePedidos.Pedidos.sln
 
+    # Build the project
     - name: Build the project
-      run: dotnet build --no-restore --configuration Release  src/app/ControlePedido.Pedidos/ControlePedidos.Pedidos.sln
+      run: dotnet build --no-restore --configuration Release src/app/ControlePedido.Pedidos/ControlePedidos.Pedidos.sln
 
-    - name: Run tests
-      run: dotnet test --no-build --configuration Release --verbosity normal  src/app/ControlePedido.Pedidos/ControlePedidos.Pedidos.sln
+    # Run tests and collect code coverage in XML format
+    - name: Run tests and collect code coverage
+      # run: dotnet-coverage collect "dotnet test src/app/ControlePedido.Pedidos/ControlePedidos.Pedidos.sln" -f xml -o "TestResults/coverage.xml"
+      run: dotnet test src/app/ControlePedido.Pedidos/ControlePedidos.Pedidos.sln --configuration Release --collect:"XPlat Code Coverage"
+
+    # Check if coverage file exists
+    # - name: Check if coverage file exists
+    #   run: |
+    #     if [ ! -f "TestResults/coverage.xml" ]; then
+    #       echo "Coverage file not found!"
+    #       exit 1
+    #     fi
+
+    - uses: chill-viking/dotnet-sonar-scanner@v2
+      name: Scan and Publish
+      with:
+        sonar-project-key: 'PosTechFiap33_controle-pedidos-api-pedidos'
+        sonar-org-key: 'postechfiap33'
+        token: ${{ secrets.GITHUB_TOKEN }}
+        sonar-token: ${{ secrets.SONAR_TOKEN }}
+        working-directory: './src/app/ControlePedido.Pedidos'
+        checkout: false
+    # SonarCloud Scan
+    # - name: SonarCloud Scan
+    #   uses: SonarSource/sonarcloud-github-action@v2
+    #   with:
+    #     organization: postechfiap33
+    #     token: ${{ secrets.SONAR_TOKEN }}
+    #     projectKey: PosTechFiap33_controle-pedidos-api-pedidos
+    #     projectName: controle-pedidos-api-pedidos
+    #     extraProperties: |
+    #       sonar.coverageReportPaths=**/TestResults/*/coverage.cobertura.xml

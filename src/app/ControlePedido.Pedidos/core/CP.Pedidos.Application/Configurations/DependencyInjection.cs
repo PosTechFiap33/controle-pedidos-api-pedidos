@@ -1,5 +1,4 @@
 using System.Reflection;
-using ControlePedido.Application.UseCases.Pedidos;
 using CP.Pedidos.Application.UseCases.Pedidos;
 using CP.Pedidos.Domain.UseCases;
 using MediatR;
@@ -17,7 +16,6 @@ public static class DependencyInjection
         });
 
         services.AddTransient<ICriarPedidoUseCase, CriarPedidoUseCase>();
-        services.AddTransient<IPagarPedidoManualmenteUseCase, PagarPedidoManualmenteUseCase>();
         services.AddTransient<IListarPedidoUseCase, ListarPedidoUseCase>();
         services.AddTransient<IIniciarPreparoPedidoUseCase, IniciarPreparoPedidoUseCase>();
         services.AddTransient<IFinalizarPreparoPedidoUseCase, FinalizarPreparoPedidoUseCase>();
