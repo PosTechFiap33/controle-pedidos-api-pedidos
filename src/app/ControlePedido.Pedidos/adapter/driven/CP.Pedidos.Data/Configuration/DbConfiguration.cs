@@ -19,7 +19,7 @@ public static class DynamoDbConfiguration
         services.AddScoped<ControlePedidoContext>();
         services.AddScoped<IPedidoRepository, PedidoRepository>();
 
-        var connectionEnv = "DbConnection";
+        var connectionEnv = "PEDIDOS_DB_CONNECTION";
         var connectionString = Environment.GetEnvironmentVariable(connectionEnv) ?? configuration[connectionEnv];
         services.AddDbContext<ControlePedidoContext>(options => options.UseNpgsql(connectionString));
 
