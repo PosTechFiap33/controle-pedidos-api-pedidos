@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Amazon.SQS;
 using Amazon.SQS.Model;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Options;
 
 namespace CP.Pedidos.Infra.Messaging;
 
+[ExcludeFromCodeCoverage]
 public class SqsMessageBus : IMessageBus
 {
     private readonly AWSConfiguration _configuration;

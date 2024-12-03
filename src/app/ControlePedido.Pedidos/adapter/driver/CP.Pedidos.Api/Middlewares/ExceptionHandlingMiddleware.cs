@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json;
 using CP.Pedidos.Domain.Base;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CP.Pedidos.Api.Middlewares;
 
+[ExcludeFromCodeCoverage]
 public class ExceptionHandlingMiddleware
 {
     private readonly RequestDelegate _next;

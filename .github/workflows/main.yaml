@@ -26,10 +26,23 @@ jobs:
 
     - name: Install dependencies
       run: dotnet restore  src/app/ControlePedido.Pedidos/ControlePedidos.Pedidos.sln
+
     - name: Build the project
       run: dotnet build --no-restore --configuration Release  src/app/ControlePedido.Pedidos/ControlePedidos.Pedidos.sln
+
     - name: Run tests
       run: dotnet test --no-build --configuration Release --verbosity normal  src/app/ControlePedido.Pedidos/ControlePedidos.Pedidos.sln
+
+    - uses: chill-viking/dotnet-sonar-scanner@v2
+      name: Sast Scan and Publish
+      with:
+        sonar-project-key: 'PosTechFiap33_controle-pedidos-api-pedidos'
+        sonar-org-key: 'postechfiap33'
+        token: ${{ secrets.GITHUB_TOKEN }}
+        sonar-token: ${{ secrets.SONAR_TOKEN }}
+        working-directory: './src/app/ControlePedido.Pedidos'
+        checkout: false
+
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
       with:

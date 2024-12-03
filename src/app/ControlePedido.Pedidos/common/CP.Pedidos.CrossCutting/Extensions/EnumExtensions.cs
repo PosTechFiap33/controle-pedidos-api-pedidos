@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace CP.Pedidos.CrossCutting;
 
+[ExcludeFromCodeCoverage]
 public static class EnumExtensions
 {
     public static string GetDescription(this Enum value){

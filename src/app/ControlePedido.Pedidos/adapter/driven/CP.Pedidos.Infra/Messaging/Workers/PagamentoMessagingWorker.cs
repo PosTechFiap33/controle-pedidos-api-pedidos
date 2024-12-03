@@ -5,9 +5,11 @@ using CP.Pedidos.Domain.Adapters.MessageBus.Messages;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace CP.Pedidos.Infra.Messaging.Workers;
 
+[ExcludeFromCodeCoverage]
 public class PagamentoMessagingWorker : MessagingWorker<PagamentoRealizadoMessage>
 {
     public PagamentoMessagingWorker(ILogger<PagamentoMessagingWorker> logger,

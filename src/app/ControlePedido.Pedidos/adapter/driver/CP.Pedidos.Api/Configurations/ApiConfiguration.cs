@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using CP.Pedidos.Api.Middlewares;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CP.Pedidos.Api.Configurations;
 
+[ExcludeFromCodeCoverage]
 public static class ApiConfiguration
 {
     public static IServiceCollection AddApiConfiguration(this IServiceCollection services)

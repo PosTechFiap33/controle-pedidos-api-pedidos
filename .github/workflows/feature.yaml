@@ -41,16 +41,7 @@ jobs:
 
     # Run tests and collect code coverage in XML format
     - name: Run tests and collect code coverage
-      # run: dotnet-coverage collect "dotnet test src/app/ControlePedido.Pedidos/ControlePedidos.Pedidos.sln" -f xml -o "TestResults/coverage.xml"
       run: dotnet test src/app/ControlePedido.Pedidos/ControlePedidos.Pedidos.sln --configuration Release --collect:"XPlat Code Coverage"
-
-    # Check if coverage file exists
-    # - name: Check if coverage file exists
-    #   run: |
-    #     if [ ! -f "TestResults/coverage.xml" ]; then
-    #       echo "Coverage file not found!"
-    #       exit 1
-    #     fi
 
     - uses: chill-viking/dotnet-sonar-scanner@v2
       name: Scan and Publish
@@ -60,14 +51,4 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         sonar-token: ${{ secrets.SONAR_TOKEN }}
         working-directory: './src/app/ControlePedido.Pedidos'
-        checkout: false
-    # SonarCloud Scan
-    # - name: SonarCloud Scan
-    #   uses: SonarSource/sonarcloud-github-action@v2
-    #   with:
-    #     organization: postechfiap33
-    #     token: ${{ secrets.SONAR_TOKEN }}
-    #     projectKey: PosTechFiap33_controle-pedidos-api-pedidos
-    #     projectName: controle-pedidos-api-pedidos
-    #     extraProperties: |
-    #       sonar.coverageReportPaths=**/TestResults/*/coverage.cobertura.xml
+        checkout: true

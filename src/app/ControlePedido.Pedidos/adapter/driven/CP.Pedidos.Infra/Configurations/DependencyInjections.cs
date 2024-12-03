@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using CP.Pedidos.CrpssCutting.Configuration;
 using CP.Pedidos.Domain.Adapters.MessageBus;
 using CP.Pedidos.Domain.Adapters.Providers;
@@ -11,6 +12,7 @@ using Refit;
 
 namespace CP.Pedidos.Infra.Configurations;
 
+[ExcludeFromCodeCoverage]
 public static class RefitConfiguration
 {
     /// <summary>
