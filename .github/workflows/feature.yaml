@@ -51,4 +51,4 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         sonar-token: ${{ secrets.SONAR_TOKEN }}
         working-directory: './src/app/ControlePedido.Pedidos'
-        checkout: true
+        checkout: false
